@@ -10,7 +10,7 @@ module.exports = function(dot, opts) {
   }
 
   state.view = opts || {}
-  state.view.views = state.view.views || new Map()
+  state.views = state.views || new Map()
 
   dot.beforeAny("view", view)
 }
@@ -19,34 +19,36 @@ function view(prop, arg, dot, e, sig) {
   arg = arg || {}
 
   var propStr = prop.join("."),
-    state = dot.state.view
+    views = dot.state.views
 
-  var element = arg.element,
-    selector = arg.selector,
-    v = state.views.get(propStr)
-
-  var ssr = !v
-
-  v = v || {
-    element: element || document.querySelector(selector),
-    render: arg.render,
-    update: arg.update,
-  }
+  var exists = views.has(propStr),
+    v = getOrCreateView(propStr, arg, dot)
 
   if (!v.element) {
     sig.value = null
     return
   }
 
-  arg = Object.assign({}, arg, v)
+  var a = Object.assign({}, arg, v)
 
   if (v.element.children.length > 0) {
-    arg.ssr = ssr
-    v.update(prop, arg, dot)
+    a.ssr = !exists
+    v.update(prop, a, dot)
   } else {
-    state.views.set(propStr, v)
-    document.body.appendChild(v.render(prop, arg, dot))
+    views.set(propStr, v)
+    document.body.appendChild(v.render(prop, a, dot))
   }
 
-  sig.value = v.container
+  sig.value = v.element
+}
+
+function getOrCreateView(propStr, arg, dot) {
+  return (
+    dot.state.views.get(propStr) || {
+      element:
+        arg.element || document.querySelector(arg.selector),
+      render: arg.render,
+      update: arg.update,
+    }
+  )
 }
