@@ -12,7 +12,7 @@ module.exports = function(dot, opts) {
   state.view = opts || {}
   state.view.views = state.view.views || new Map()
 
-  dot.any("view", view)
+  dot.beforeAny("view", view)
 }
 
 function view(prop, arg, dot, e, sig) {
@@ -21,13 +21,14 @@ function view(prop, arg, dot, e, sig) {
   var propStr = prop.join("."),
     state = dot.state.view
 
-  var selector = arg.selector,
+  var element = arg.element,
+    selector = arg.selector,
     v = state.views.get(propStr)
 
   var ssr = !v
 
   v = v || {
-    element: document.querySelector(selector),
+    element: element || document.querySelector(selector),
     render: arg.render,
     update: arg.update,
   }

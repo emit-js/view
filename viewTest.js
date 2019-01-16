@@ -1,6 +1,5 @@
 /** @jsx el */
 /* eslint-env jest */
-/*global document*/
 
 var dot = require("dot-event")()
 var view = require("./")
@@ -9,19 +8,41 @@ var JSDOM = require("jsdom").JSDOM
 var el = require("attodom").el
 
 var window = new JSDOM().window
+var body = window.document.body
 global.document = window.document
 
 beforeEach(function() {
+  while (body.firstChild) {
+    body.removeChild(body.firstChild)
+  }
+
   dot.reset()
   view(dot)
 })
 
-test("empty dom", function() {
-  expect.assertions(2)
+test("empty dom with element", function() {
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body,
+      render: render,
+    })
+    return el("div")
+  }
+
+  dot.view({
+    element: body,
+    render: render,
+  })
+
+  expect(body.children.length).toBe(1)
+})
+
+test("empty dom with selector", function() {
+  expect.assertions(3)
 
   var render = function(prop, arg) {
     expect(arg).toEqual({
-      element: window.document.body,
+      element: body,
       render: render,
       selector: "body",
       update: update,
@@ -31,7 +52,7 @@ test("empty dom", function() {
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
-      element: window.document.body,
+      element: body,
       render: render,
       ssr: false,
       update: update,
@@ -45,12 +66,14 @@ test("empty dom", function() {
   })
 
   dot.view()
+
+  expect(body.children.length).toBe(1)
 })
 
-test("pre-rendered dom", function() {
-  expect.assertions(1)
+test("existing dom with selector", function() {
+  expect.assertions(2)
 
-  document.body.appendChild(el("div"))
+  body.appendChild(el("div"))
 
   var render = function() {
     expect(true).toEqual(false)
@@ -58,7 +81,7 @@ test("pre-rendered dom", function() {
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
-      element: window.document.body,
+      element: body,
       render: render,
       selector: "body",
       ssr: true,
@@ -71,4 +94,6 @@ test("pre-rendered dom", function() {
     selector: "body",
     update: update,
   })
+
+  expect(body.children.length).toBe(1)
 })
