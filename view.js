@@ -31,10 +31,7 @@ function view(prop, arg, dot, e, sig) {
   }
 
   if (!exists) {
-    a.ssr =
-      !exists &&
-      !!v.element &&
-      v.element.children.length > 0
+    a.ssr = !exists && !!v.element && !!v.element.innerHTML
 
     var el = v.render(prop, a, dot)
 
