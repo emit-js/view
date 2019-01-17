@@ -76,7 +76,7 @@ test("existing dom with selector", function() {
   body.appendChild(el("div"))
 
   var render = function() {
-    expect(true).toEqual(false)
+    throw new Error("render shouldn't run")
   }
 
   var update = function(prop, arg) {

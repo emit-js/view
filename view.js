@@ -36,7 +36,7 @@ function view(prop, arg, dot, e, sig) {
     v.update(prop, a, dot)
   } else {
     views.set(propStr, v)
-    document.body.appendChild(v.render(prop, a, dot))
+    v.element.appendChild(v.render(prop, a, dot))
   }
 
   sig.value = v.element

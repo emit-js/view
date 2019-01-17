@@ -1,5 +1,5 @@
 {
-  "name": "view",
+  "name": "@dot-event/view",
   "version": "0.0.1",
   "description": "dot-event views",
   "keywords": [
@@ -37,27 +37,7 @@
     "git": {},
     "link": {},
     "spawn": {},
-    "version": {},
-    "watchman": {
-      "triggers": [
-        {
-          "name": "babel",
-          "expression": [
-            "anyof",
-            [
-              "match",
-              "lib/**/*.js",
-              "wholename"
-            ]
-          ],
-          "command": [
-            "npm",
-            "run",
-            "build"
-          ]
-        }
-      ]
-    }
+    "version": {}
   },
   "eslintConfig": {
     "env": {
