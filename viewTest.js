@@ -3,28 +3,58 @@
 
 var dot = require("dot-event")()
 var view = require("./")
-
 var el = require("attodom").el
-
 var JSDOM = require("jsdom").JSDOM
-var jsdom = new JSDOM()
-var window = jsdom.window
-var body = window.document.body
 
-global.document = window.document
+var body, document, window
+
+function clear(el) {
+  while (el.firstChild) {
+    el.removeChild(el.firstChild)
+  }
+}
 
 beforeEach(function() {
-  while (body.firstChild) {
-    body.removeChild(body.firstChild)
-  }
+  var jsdom = new JSDOM()
 
+  window = jsdom.window
+  document = window.document
+  body = document.body
+
+  global.document = window.document
+
+  clear(body)
   body.appendChild(el("div", { id: "main" }))
 
   dot.reset()
   view(dot)
 })
 
-test("empty dom with element", function() {
+test("empty document", function() {
+  expect.assertions(3)
+
+  clear(document)
+
+  var update = function() {
+    expect(true).toBe(true)
+  }
+
+  var render = function(prop, arg) {
+    expect(arg.ssr).toBe(false)
+    return el("html", { update: update }, el("body"))
+  }
+
+  dot.view({
+    element: document,
+    render: render,
+  })
+
+  dot.view()
+
+  expect(body.children.length).toBe(1)
+})
+
+test("empty body", function() {
   expect.assertions(3)
 
   var update = function(prop, arg) {
@@ -53,7 +83,7 @@ test("empty dom with element", function() {
   expect(body.children.length).toBe(1)
 })
 
-test("empty dom with selector", function() {
+test("empty body (selector)", function() {
   expect.assertions(3)
 
   var update = function(prop, arg) {
@@ -83,7 +113,7 @@ test("empty dom with selector", function() {
   expect(body.children.length).toBe(1)
 })
 
-test("existing dom with selector", function() {
+test("existing body (selector)", function() {
   expect.assertions(3)
 
   body.children[0].appendChild(el("div"))

@@ -33,10 +33,18 @@ function view(prop, arg, dot, e, sig) {
 
   if (exists && v.element.update) {
     v.element.update(prop, a, dot)
-  } else {
+  }
+
+  if (!exists) {
     a.ssr = !exists && v.element.children.length > 0
     var el = v.render(prop, a, dot)
-    v.element.parentNode.replaceChild(el, v.element)
+
+    if (v.element.parentNode) {
+      v.element.parentNode.replaceChild(el, v.element)
+    } else {
+      v.element.appendChild(el)
+    }
+
     v.element = el
     views.set(propStr, v)
   }
