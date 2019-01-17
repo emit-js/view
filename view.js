@@ -31,12 +31,14 @@ function view(prop, arg, dot, e, sig) {
 
   var a = Object.assign({}, arg, v)
 
-  if (v.element.children.length > 0) {
-    a.ssr = !exists
-    v.update(prop, a, dot)
+  if (exists && v.element.update) {
+    v.element.update(prop, a, dot)
   } else {
+    a.ssr = !exists && v.element.children.length > 0
+    var el = v.render(prop, a, dot)
+    v.element.parentNode.replaceChild(el, v.element)
+    v.element = el
     views.set(propStr, v)
-    v.element.appendChild(v.render(prop, a, dot))
   }
 
   sig.value = v.element
@@ -48,7 +50,6 @@ function getOrCreateView(propStr, arg, dot) {
       element:
         arg.element || document.querySelector(arg.selector),
       render: arg.render,
-      update: arg.update,
     }
   )
 }

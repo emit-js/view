@@ -4,11 +4,13 @@
 var dot = require("dot-event")()
 var view = require("./")
 
-var JSDOM = require("jsdom").JSDOM
 var el = require("attodom").el
 
-var window = new JSDOM().window
+var JSDOM = require("jsdom").JSDOM
+var jsdom = new JSDOM()
+var window = jsdom.window
 var body = window.document.body
+
 global.document = window.document
 
 beforeEach(function() {
@@ -16,23 +18,37 @@ beforeEach(function() {
     body.removeChild(body.firstChild)
   }
 
+  body.appendChild(el("div", { id: "main" }))
+
   dot.reset()
   view(dot)
 })
 
 test("empty dom with element", function() {
-  var render = function(prop, arg) {
+  expect.assertions(3)
+
+  var update = function(prop, arg) {
     expect(arg).toEqual({
-      element: body,
+      element: body.children[0],
       render: render,
     })
-    return el("div")
+  }
+
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body.children[0],
+      render: render,
+      ssr: false,
+    })
+    return el("div", { update: update })
   }
 
   dot.view({
-    element: body,
+    element: body.children[0],
     render: render,
   })
+
+  dot.view()
 
   expect(body.children.length).toBe(1)
 })
@@ -40,29 +56,26 @@ test("empty dom with element", function() {
 test("empty dom with selector", function() {
   expect.assertions(3)
 
-  var render = function(prop, arg) {
-    expect(arg).toEqual({
-      element: body,
-      render: render,
-      selector: "body",
-      update: update,
-    })
-    return el("div")
-  }
-
   var update = function(prop, arg) {
     expect(arg).toEqual({
-      element: body,
+      element: body.children[0],
       render: render,
-      ssr: false,
-      update: update,
     })
+  }
+
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body.children[0],
+      render: render,
+      selector: "#main",
+      ssr: false,
+    })
+    return el("div", { update: update })
   }
 
   dot.view({
     render: render,
-    selector: "body",
-    update: update,
+    selector: "#main",
   })
 
   dot.view()
@@ -71,29 +84,33 @@ test("empty dom with selector", function() {
 })
 
 test("existing dom with selector", function() {
-  expect.assertions(2)
+  expect.assertions(3)
 
-  body.appendChild(el("div"))
-
-  var render = function() {
-    throw new Error("render shouldn't run")
-  }
+  body.children[0].appendChild(el("div"))
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
-      element: body,
+      element: body.children[0],
       render: render,
-      selector: "body",
-      ssr: true,
-      update: update,
     })
+  }
+
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body.children[0],
+      render: render,
+      selector: "#main",
+      ssr: true,
+    })
+    return el("div", { update: update })
   }
 
   dot.view({
     render: render,
-    selector: "body",
-    update: update,
+    selector: "#main",
   })
+
+  dot.view()
 
   expect(body.children.length).toBe(1)
 })
