@@ -6,7 +6,7 @@ var view = require("./")
 var el = require("attodom").el
 var JSDOM = require("jsdom").JSDOM
 
-var body, document, window
+var body, document, main, window
 
 function clear(el) {
   while (el.firstChild) {
@@ -22,12 +22,32 @@ beforeEach(function() {
   body = document.body
 
   global.document = window.document
+  main = el("div", { id: "main" })
 
   clear(body)
-  body.appendChild(el("div", { id: "main" }))
+  body.appendChild(main)
 
   dot.reset()
   view(dot)
+})
+
+test("no element", function() {
+  expect.assertions(4)
+
+  var update = function() {
+    expect(true).toBe(true)
+  }
+
+  var render = function(prop, arg) {
+    expect(arg.ssr).toBe(false)
+    return el("div", { update: update })
+  }
+
+  var out = dot.view({ render: render })
+  dot.view()
+
+  expect(out.tagName).toBe("DIV")
+  expect(main.children.length).toBe(0)
 })
 
 test("empty document", function() {
@@ -51,7 +71,7 @@ test("empty document", function() {
 
   dot.view()
 
-  expect(body.children.length).toBe(1)
+  expect(document.children.length).toBe(1)
 })
 
 test("empty body", function() {
@@ -74,7 +94,7 @@ test("empty body", function() {
   }
 
   dot.view({
-    element: body.children[0],
+    element: main,
     render: render,
   })
 

@@ -24,11 +24,6 @@ function view(prop, arg, dot, e, sig) {
   var exists = views.has(propStr),
     v = getOrCreateView(propStr, arg, dot)
 
-  if (!v.element) {
-    sig.value = null
-    return
-  }
-
   var a = Object.assign({}, arg, v)
 
   if (exists && v.element.update) {
@@ -36,13 +31,19 @@ function view(prop, arg, dot, e, sig) {
   }
 
   if (!exists) {
-    a.ssr = !exists && v.element.children.length > 0
+    a.ssr =
+      !exists &&
+      !!v.element &&
+      v.element.children.length > 0
+
     var el = v.render(prop, a, dot)
 
-    if (v.element.parentNode) {
-      v.element.parentNode.replaceChild(el, v.element)
-    } else {
-      v.element.appendChild(el)
+    if (v.element) {
+      if (v.element.parentNode) {
+        v.element.parentNode.replaceChild(el, v.element)
+      } else {
+        v.element.appendChild(el)
+      }
     }
 
     v.element = el
