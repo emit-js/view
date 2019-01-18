@@ -12,6 +12,12 @@ module.exports = function(dot, opts) {
   state.view = opts || {}
   state.views = state.views || new Map()
 
+  if (state.log) {
+    state.log.levels.view = state.log.levels.view || {
+      info: "debug",
+    }
+  }
+
   dot.beforeAny("view", view)
 }
 
