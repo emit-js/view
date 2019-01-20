@@ -21,24 +21,31 @@ module.exports = function(dot, opts) {
   dot.beforeAny("view", view)
 }
 
-function view(prop, arg, dot, e, sig) {
+function view(prop, arg, dot) {
+  dot.beforeAny(prop[0], renderOrUpdate)
+  dot.beforeAny(prop[0] + "Render", arg.render)
+  dot.any(prop[0] + "Update", arg.update)
+}
+
+function renderOrUpdate(prop, arg, dot, e, sig) {
   arg = arg || {}
 
-  var propStr = prop.join("."),
-    views = dot.state.views
+  var views = dot.state.views
 
-  var exists = views.has(propStr),
-    v = getOrCreateView(propStr, arg, dot)
+  var exists = views.has(e),
+    v = getOrCreateView(e, arg, dot)
 
   var a = Object.assign({}, arg, v)
   a.ssr = !exists && !!v.element && !!v.element.innerHTML
 
-  if (v.element && v.element.innerHTML) {
-    v.update(prop, a, dot)
-  } else {
-    var el = v.render(prop, a, dot)
+  views.set(e, v)
 
-    if (v.element) {
+  if (v.element && v.element.innerHTML) {
+    return dot[e + "Update"](prop, a)
+  } else {
+    var el = dot[e + "Render"](prop, a)
+
+    if (v.element && el) {
       if (v.element.parentNode) {
         v.element.parentNode.replaceChild(el, v.element)
       } else {
@@ -47,19 +54,15 @@ function view(prop, arg, dot, e, sig) {
     }
 
     v.element = el
-    views.set(propStr, v)
+    sig.value = v.element
   }
-
-  sig.value = v.element
 }
 
-function getOrCreateView(propStr, arg, dot) {
+function getOrCreateView(prop, arg, dot) {
   return (
-    dot.state.views.get(propStr) || {
+    dot.state.views.get(prop) || {
       element:
         arg.element || document.querySelector(arg.selector),
-      render: arg.render,
-      update: arg.update,
     }
   )
 }
