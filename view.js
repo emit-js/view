@@ -31,14 +31,11 @@ function view(prop, arg, dot, e, sig) {
     v = getOrCreateView(propStr, arg, dot)
 
   var a = Object.assign({}, arg, v)
+  a.ssr = !exists && !!v.element && !!v.element.innerHTML
 
-  if (exists && v.element.update) {
-    v.element.update(prop, a, dot)
-  }
-
-  if (!exists) {
-    a.ssr = !exists && !!v.element && !!v.element.innerHTML
-
+  if (v.element && v.element.innerHTML) {
+    v.update(prop, a, dot)
+  } else {
     var el = v.render(prop, a, dot)
 
     if (v.element) {
@@ -62,6 +59,7 @@ function getOrCreateView(propStr, arg, dot) {
       element:
         arg.element || document.querySelector(arg.selector),
       render: arg.render,
+      update: arg.update,
     }
   )
 }

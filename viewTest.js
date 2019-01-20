@@ -40,10 +40,10 @@ test("no element", function() {
 
   var render = function(prop, arg) {
     expect(arg.ssr).toBe(false)
-    return el("div", { update: update })
+    return el("div")
   }
 
-  var out = dot.view({ render: render })
+  var out = dot.view({ render: render, update: update })
   dot.view()
 
   expect(out.tagName).toBe("DIV")
@@ -61,12 +61,13 @@ test("empty document", function() {
 
   var render = function(prop, arg) {
     expect(arg.ssr).toBe(false)
-    return el("html", { update: update }, el("body"))
+    return el("html", el("body"))
   }
 
   dot.view({
     element: document,
     render: render,
+    update: update,
   })
 
   dot.view()
@@ -81,6 +82,8 @@ test("empty body", function() {
     expect(arg).toEqual({
       element: body.children[0],
       render: render,
+      ssr: false,
+      update: update,
     })
   }
 
@@ -89,13 +92,15 @@ test("empty body", function() {
       element: body.children[0],
       render: render,
       ssr: false,
+      update: update,
     })
-    return el("div", { update: update })
+    return el("div", "test")
   }
 
   dot.view({
     element: main,
     render: render,
+    update: update,
   })
 
   dot.view()
@@ -110,6 +115,8 @@ test("empty body (selector)", function() {
     expect(arg).toEqual({
       element: body.children[0],
       render: render,
+      ssr: false,
+      update: update,
     })
   }
 
@@ -119,13 +126,15 @@ test("empty body (selector)", function() {
       render: render,
       selector: "#main",
       ssr: false,
+      update: update,
     })
-    return el("div", { update: update })
+    return el("div", "test")
   }
 
   dot.view({
     render: render,
     selector: "#main",
+    update: update,
   })
 
   dot.view()
@@ -134,7 +143,7 @@ test("empty body (selector)", function() {
 })
 
 test("existing body (selector)", function() {
-  expect.assertions(3)
+  expect.assertions(2)
 
   body.children[0].appendChild(el("div"))
 
@@ -142,25 +151,21 @@ test("existing body (selector)", function() {
     expect(arg).toEqual({
       element: body.children[0],
       render: render,
+      selector: "#main",
+      ssr: true,
+      update: update,
     })
   }
 
-  var render = function(prop, arg) {
-    expect(arg).toEqual({
-      element: body.children[0],
-      render: render,
-      selector: "#main",
-      ssr: true,
-    })
-    return el("div", { update: update })
+  var render = function() {
+    throw new Error("shouldn't render")
   }
 
   dot.view({
     render: render,
     selector: "#main",
+    update: update,
   })
-
-  dot.view()
 
   expect(body.children.length).toBe(1)
 })
