@@ -33,7 +33,7 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   var views = dot.state.views
 
   var exists = views.has(e),
-    v = getOrCreateView(e, arg, dot)
+    v = getOrCreateView(prop, arg, dot, e)
 
   var a = Object.assign({}, arg, v)
   a.ssr = !exists && !!v.element && !!v.element.innerHTML
@@ -58,11 +58,18 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   }
 }
 
-function getOrCreateView(prop, arg, dot) {
+function getOrCreateView(prop, arg, dot, e) {
   return (
-    dot.state.views.get(prop) || {
-      element:
-        arg.element || document.querySelector(arg.selector),
+    dot.state.views.get(e) || {
+      element: arg.element || findElement(prop, arg),
     }
   )
+}
+
+function findElement(prop, arg) {
+  if (arg.selector || prop.length) {
+    return document.querySelector(
+      arg.selector || prop.join(".")
+    )
+  }
 }
