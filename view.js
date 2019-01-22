@@ -67,9 +67,10 @@ function getOrCreateView(prop, arg, dot, e) {
 }
 
 function findElement(prop, arg) {
-  if (arg.selector || prop.length) {
-    return document.querySelector(
-      arg.selector || prop.join(".")
-    )
+  var selector =
+    arg.selector ||
+    (prop.length ? "#" + prop.join(".") : null)
+  if (selector) {
+    return document.querySelector(selector)
   }
 }
