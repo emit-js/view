@@ -38,10 +38,8 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   var a = Object.assign({}, arg, v)
   a.ssr = !exists && !!v.element && !!v.element.innerHTML
 
-  views.set(e, v)
-
-  if (v.element && v.element.innerHTML) {
-    return dot[e + "Update"](prop, a)
+  if (exists || (v.element && v.element.innerHTML)) {
+    dot[e + "Update"](prop, a)
   } else {
     var el = dot[e + "Render"](prop, a)
 
@@ -56,6 +54,8 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
     v.element = el
     sig.value = v.element
   }
+
+  views.set(e, v)
 }
 
 function getOrCreateView(prop, arg, dot, e) {

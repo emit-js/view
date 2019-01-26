@@ -55,8 +55,8 @@ test("no element", function() {
 test("no element, call twice", function() {
   expect.assertions(2)
 
-  var update = function() {
-    throw new Error("shouldn't update")
+  var update = function(prop, arg) {
+    expect(arg.ssr).toBe(false)
   }
 
   var render = function(prop, arg) {
