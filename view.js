@@ -30,21 +30,24 @@ function view(prop, arg, dot) {
 function renderOrUpdate(prop, arg, dot, e, sig) {
   arg = arg || {}
 
-  var views = dot.state.views
+  var el,
+    v = getOrCreateView(prop, arg, dot, e),
+    views = dot.state.views
 
-  var exists = views.has(e),
-    v = getOrCreateView(prop, arg, dot, e)
+  var exists = views.has(e)
 
   var existsOrHasContent =
     exists || (v.element && v.element.innerHTML)
 
-  var a = Object.assign({}, arg, v)
-  a.ssr = !exists && !!v.element && !!v.element.innerHTML
+  var a = Object.assign({}, arg, v, {
+      ssr: !exists && !!v.element && !!v.element.innerHTML,
+    }),
+    p = e.replace(/View$/, "")
 
   if (existsOrHasContent) {
-    dot(e + "Update", prop, a)
+    el = dot(e + "Update", prop, p, a)
   } else {
-    var el = dot(e + "Render", prop, a)
+    el = dot(e + "Render", prop, p, a)
 
     if (v.element && el) {
       if (v.element.parentNode) {
@@ -53,10 +56,13 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
         v.element.appendChild(el)
       }
     }
-
-    v.element = el
-    sig.value = v.element
   }
+
+  if (el) {
+    v.element = el
+  }
+
+  sig.value = v.element
 
   views.set(e, v)
 }

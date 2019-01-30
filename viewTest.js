@@ -34,13 +34,14 @@ beforeEach(function() {
 })
 
 test("no element", function() {
-  expect.assertions(3)
+  expect.assertions(4)
 
   var update = function() {
     throw new Error("shouldn't update")
   }
 
   var render = function(prop, arg) {
+    expect(prop).toEqual(["test"])
     expect(arg.ssr).toBe(false)
     return el("div")
   }
