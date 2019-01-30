@@ -44,6 +44,10 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
     }),
     p = e.replace(/View$/, "")
 
+  if (p === prop[prop.length - 1]) {
+    p = undefined
+  }
+
   if (existsOrHasContent) {
     el = dot(e + "Update", prop, p, a)
   } else {

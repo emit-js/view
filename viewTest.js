@@ -1,4 +1,3 @@
-/** @jsx el */
 /* eslint-env jest */
 
 var dot = require("dot-event")()
@@ -46,7 +45,11 @@ test("no element", function() {
     return el("div")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView", "test", {
+    render: render,
+    update: update,
+  })
+
   var out = dot.testView()
 
   expect(out.tagName).toBe("DIV")
