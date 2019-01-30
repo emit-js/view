@@ -35,13 +35,16 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   var exists = views.has(e),
     v = getOrCreateView(prop, arg, dot, e)
 
+  var existsOrHasContent =
+    exists || (v.element && v.element.innerHTML)
+
   var a = Object.assign({}, arg, v)
   a.ssr = !exists && !!v.element && !!v.element.innerHTML
 
-  if (exists || (v.element && v.element.innerHTML)) {
-    dot[e + "Update"](prop, a)
+  if (existsOrHasContent) {
+    dot(e + "Update", prop, a)
   } else {
-    var el = dot[e + "Render"](prop, a)
+    var el = dot(e + "Render", prop, a)
 
     if (v.element && el) {
       if (v.element.parentNode) {
