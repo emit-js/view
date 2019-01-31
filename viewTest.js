@@ -122,6 +122,32 @@ test("empty body", function() {
   expect(body.children.length).toBe(1)
 })
 
+test("empty body (prop)", function() {
+  expect.assertions(3)
+
+  var update = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body.children[0],
+      ssr: false,
+    })
+  }
+
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: body.children[0],
+      ssr: false,
+    })
+    return el("div", "test")
+  }
+
+  dot.view("testView", { render: render, update: update })
+
+  dot.testView("main")
+  dot.testView("main")
+
+  expect(body.children.length).toBe(1)
+})
+
 test("empty body (selector)", function() {
   expect.assertions(3)
 
@@ -147,6 +173,64 @@ test("empty body (selector)", function() {
   dot.testView()
 
   expect(body.children.length).toBe(1)
+})
+
+test("existing body (prop)", function() {
+  expect.assertions(3)
+  var counter = 0
+
+  body.children[0].appendChild(el("div", "test"))
+
+  var update = function(prop, arg) {
+    if (counter++ === 0) {
+      expect(arg).toEqual({
+        element: body.children[0],
+        ssr: true,
+      })
+    } else {
+      expect(arg).toEqual({
+        element: body.children[0],
+        ssr: false,
+      })
+    }
+  }
+
+  var render = function() {
+    throw new Error("shouldn't render")
+  }
+
+  dot.view("testView", { render: render, update: update })
+
+  dot.testView("main")
+  dot.testView("main")
+
+  expect(body.children.length).toBe(1)
+})
+
+test("existing body (child prop)", function() {
+  expect.assertions(3)
+
+  var update = function(prop, arg) {
+    expect(arg).toEqual({
+      element: main.children[0],
+      ssr: false,
+    })
+  }
+
+  var render = function(prop, arg) {
+    expect(arg).toEqual({
+      element: null,
+      ssr: false,
+    })
+    return el("div", "test2")
+  }
+
+  dot.view("testView", { render: render, update: update })
+
+  dot.testView("main", "test")
+  dot.testView("main", "test")
+
+  expect(main.children.length).toBe(1)
 })
 
 test("existing body (selector)", function() {

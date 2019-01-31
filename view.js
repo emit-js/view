@@ -50,6 +50,10 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
 
   if (existsOrHasContent) {
     el = dot(e + "Update", prop, p, a)
+
+    if (el.then) {
+      el = undefined
+    }
   } else {
     el = dot(e + "Render", prop, p, a)
 
@@ -58,6 +62,14 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
         v.element.parentNode.replaceChild(el, v.element)
       } else {
         v.element.appendChild(el)
+      }
+    }
+
+    if (!v.element && el) {
+      var parent = findElement(prop.slice(0, -1))
+
+      if (parent) {
+        parent.appendChild(el)
       }
     }
   }
@@ -80,10 +92,9 @@ function getOrCreateView(prop, arg, dot, e) {
 }
 
 function findElement(prop, arg) {
-  var selector =
-    arg.selector ||
-    (prop.length ? "#" + prop.join(".") : null)
-  if (selector) {
-    return document.querySelector(selector)
+  if (arg && arg.selector) {
+    return document.querySelector(arg.selector)
+  } else if (prop.length) {
+    return document.getElementById(prop.join("."))
   }
 }
