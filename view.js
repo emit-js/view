@@ -31,10 +31,11 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   arg = arg || {}
 
   var el,
+    id = [e].concat(prop).join("."),
     v = getOrCreateView(prop, arg, dot, e),
     views = dot.state.views
 
-  var exists = views.has(e)
+  var exists = views.has(id)
 
   var existsOrHasContent =
     exists || (v.element && v.element.innerHTML)
@@ -80,7 +81,7 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
 
   sig.value = v.element
 
-  views.set(e, v)
+  views.set(id, v)
 }
 
 function getOrCreateView(prop, arg, dot, e) {
