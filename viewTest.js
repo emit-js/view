@@ -222,7 +222,7 @@ test("existing body (child prop)", function() {
       element: null,
       ssr: false,
     })
-    return el("div", "test2")
+    return el("div", { id: prop })
   }
 
   dot.view("testView", { render: render, update: update })

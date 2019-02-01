@@ -32,7 +32,7 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
 
   var el,
     id = [e].concat(prop).join("."),
-    v = getOrCreateView(prop, arg, dot, e),
+    v = getOrCreateView(prop, arg, dot, id),
     views = dot.state.views
 
   var exists = views.has(id)
@@ -84,9 +84,9 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   views.set(id, v)
 }
 
-function getOrCreateView(prop, arg, dot, e) {
+function getOrCreateView(prop, arg, dot, id) {
   return (
-    dot.state.views.get(e) || {
+    dot.state.views.get(id) || {
       element: arg.element || findElement(prop, arg),
     }
   )
