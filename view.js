@@ -23,8 +23,24 @@ module.exports = function(dot, opts) {
 
 function view(prop, arg, dot) {
   dot.beforeAny(prop[0], renderOrUpdate)
-  dot.beforeAny(prop[0] + "Render", arg.render)
-  dot.any(prop[0] + "Update", arg.update)
+
+  dot.beforeAny(
+    prop[0] + "Render",
+    arg.idProp ? arg.render : addChildProp.bind(arg.render)
+  )
+
+  dot.beforeAny(
+    prop[0] + "Update",
+    arg.idProp ? arg.update : addChildProp.bind(arg.update)
+  )
+}
+
+function addChildProp(p, a, d, e, s) {
+  var prop = e.replace(/View(Render|Update)$/, "")
+  if (p[p.length - 1] !== prop) {
+    p = p.concat([prop])
+  }
+  return this.call(null, p, a, d, e, s)
 }
 
 function renderOrUpdate(prop, arg, dot, e, sig) {
@@ -41,22 +57,17 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
     exists || (v.element && v.element.innerHTML)
 
   var a = Object.assign({}, arg, v, {
-      ssr: !exists && !!v.element && !!v.element.innerHTML,
-    }),
-    p = e.replace(/View$/, "")
-
-  if (p === prop[prop.length - 1]) {
-    p = undefined
-  }
+    ssr: !exists && !!v.element && !!v.element.innerHTML,
+  })
 
   if (existsOrHasContent) {
-    el = dot(e + "Update", prop, p, a)
+    el = dot(e + "Update", prop, a)
 
     if (el.then) {
       el = undefined
     }
   } else {
-    el = dot(e + "Render", prop, p, a)
+    el = dot(e + "Render", prop, a)
 
     if (v.element && el) {
       if (v.element.parentNode) {
