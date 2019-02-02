@@ -22,6 +22,16 @@ module.exports = function(dot, opts) {
 }
 
 function view(prop, arg, dot) {
+  var state = dot.state
+
+  if (state.log) {
+    state.log.levels[prop[0]] = state.log.levels[
+      prop[0]
+    ] || {
+      info: "debug",
+    }
+  }
+
   dot.beforeAny(prop[0], renderOrUpdate)
 
   dot.beforeAny(
@@ -74,14 +84,6 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
         v.element.parentNode.replaceChild(el, v.element)
       } else {
         v.element.appendChild(el)
-      }
-    }
-
-    if (!v.element && el) {
-      var parent = findElement(prop.slice(0, -1))
-
-      if (parent) {
-        parent.appendChild(el)
       }
     }
   }

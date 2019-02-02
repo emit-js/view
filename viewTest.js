@@ -207,32 +207,6 @@ test("existing body (prop)", function() {
   expect(body.children.length).toBe(1)
 })
 
-test("existing body (child prop)", function() {
-  expect.assertions(3)
-
-  var update = function(prop, arg) {
-    expect(arg).toEqual({
-      element: main.children[0],
-      ssr: false,
-    })
-  }
-
-  var render = function(prop, arg) {
-    expect(arg).toEqual({
-      element: null,
-      ssr: false,
-    })
-    return el("div", { id: prop })
-  }
-
-  dot.view("testView", { render: render, update: update })
-
-  dot.testView("main", "test")
-  dot.testView("main", "test")
-
-  expect(main.children.length).toBe(1)
-})
-
 test("existing body (selector)", function() {
   expect.assertions(3)
   var counter = 0
