@@ -46,7 +46,7 @@ function view(prop, arg, dot) {
 }
 
 function addChildProp(p, a, d, e, s) {
-  var prop = e.replace(/View(Render|Update)$/, "")
+  var prop = e.replace(/[A-Z][a-z]*[A-Z][a-z]*$/, "")
   if (p[p.length - 1] !== prop) {
     p = p.concat([prop])
   }
