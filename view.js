@@ -18,7 +18,7 @@ module.exports = function(dot, opts) {
     }
   }
 
-  dot.beforeAny("view", view)
+  dot.any("view", view)
 }
 
 function view(prop, arg, dot) {
@@ -32,14 +32,14 @@ function view(prop, arg, dot) {
     }
   }
 
-  dot.beforeAny(prop[0], renderOrUpdate)
+  dot.any(prop[0], renderOrUpdate)
 
-  dot.beforeAny(
+  dot.any(
     prop[0] + "Render",
     arg.idProp ? arg.render : addChildProp.bind(arg.render)
   )
 
-  dot.beforeAny(
+  dot.any(
     prop[0] + "Update",
     arg.idProp ? arg.update : addChildProp.bind(arg.update)
   )
