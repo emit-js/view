@@ -53,11 +53,11 @@ test("no element", function() {
   var out = dot.testView()
 
   expect(out.tagName).toBe("DIV")
-  expect(main.children.length).toBe(0)
+  expect(document.body.children[0]).toBe(main)
 })
 
 test("no element, call twice", function() {
-  expect.assertions(2)
+  expect.assertions(3)
 
   var update = function(prop, arg) {
     expect(arg.ssr).toBe(false)
@@ -72,10 +72,12 @@ test("no element, call twice", function() {
 
   dot.testView()
   dot.testView()
+
+  expect(document.body.children[0]).toBe(main)
 })
 
 test("empty document", function() {
-  expect.assertions(3)
+  expect.assertions(5)
 
   clear(document)
 
@@ -94,10 +96,14 @@ test("empty document", function() {
   dot.testView()
 
   expect(document.children.length).toBe(1)
+  expect(document.children[0].tagName).toBe("HTML")
+  expect(document.children[0].children[0].tagName).toBe(
+    "BODY"
+  )
 })
 
 test("empty body", function() {
-  expect.assertions(3)
+  expect.assertions(4)
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
@@ -120,10 +126,11 @@ test("empty body", function() {
   dot.testView()
 
   expect(body.children.length).toBe(1)
+  expect(body.children[0].textContent).toBe("test")
 })
 
 test("empty body (prop)", function() {
-  expect.assertions(3)
+  expect.assertions(4)
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
@@ -146,10 +153,11 @@ test("empty body (prop)", function() {
   dot.testView("main")
 
   expect(body.children.length).toBe(1)
+  expect(body.children[0].textContent).toBe("test")
 })
 
 test("empty body (selector)", function() {
-  expect.assertions(3)
+  expect.assertions(4)
 
   var update = function(prop, arg) {
     expect(arg).toEqual({
@@ -173,10 +181,11 @@ test("empty body (selector)", function() {
   dot.testView()
 
   expect(body.children.length).toBe(1)
+  expect(body.children[0].textContent).toBe("test")
 })
 
 test("existing body (prop)", function() {
-  expect.assertions(3)
+  expect.assertions(4)
   var counter = 0
 
   body.children[0].appendChild(el("div", "test"))
@@ -192,6 +201,7 @@ test("existing body (prop)", function() {
         element: body.children[0],
         ssr: false,
       })
+      return el("div", "test2")
     }
   }
 
@@ -205,10 +215,11 @@ test("existing body (prop)", function() {
   dot.testView("main")
 
   expect(body.children.length).toBe(1)
+  expect(body.children[0].textContent).toBe("test2")
 })
 
 test("existing body (selector)", function() {
-  expect.assertions(3)
+  expect.assertions(4)
   var counter = 0
 
   body.children[0].appendChild(el("div", "test"))
@@ -225,6 +236,7 @@ test("existing body (selector)", function() {
         element: body.children[0],
         ssr: false,
       })
+      return el("div", "test2")
     }
   }
 
@@ -238,4 +250,5 @@ test("existing body (selector)", function() {
   dot.testView()
 
   expect(body.children.length).toBe(1)
+  expect(body.children[0].textContent).toBe("test2")
 })

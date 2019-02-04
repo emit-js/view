@@ -67,24 +67,21 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
     exists || (v.element && v.element.innerHTML)
 
   var a = Object.assign({}, arg, v, {
-    ssr: !exists && !!v.element && !!v.element.innerHTML,
-  })
+      ssr: !exists && !!v.element && !!v.element.innerHTML,
+    }),
+    suffix = existsOrHasContent ? "Update" : "Render"
 
-  if (existsOrHasContent) {
-    el = dot(e + "Update", prop, a)
+  el = dot(e + suffix, prop, a)
 
-    if (el.then) {
-      el = undefined
-    }
-  } else {
-    el = dot(e + "Render", prop, a)
+  if (el.then) {
+    el = undefined
+  }
 
-    if (v.element && el) {
-      if (v.element.parentNode) {
-        v.element.parentNode.replaceChild(el, v.element)
-      } else {
-        v.element.appendChild(el)
-      }
+  if (v.element && el) {
+    if (v.element.parentNode) {
+      v.element.parentNode.replaceChild(el, v.element)
+    } else {
+      v.element.appendChild(el)
     }
   }
 
