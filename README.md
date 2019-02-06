@@ -82,3 +82,11 @@ The `view` composer automatically adds the name of the view to [the `prop` array
 It is a typical pattern to use `prop.join(".")` as your div id. Because the view name is automatically added to props, you can keep passing props down to your sub views without modifying or thinking too much about it.
 
 In this way, we leverage props to get great element identifiers and [logging](https://github.com/dot-event/log2) without any effort!
+
+## Related composers
+
+| Library    | Description    | URL                                     |
+| ---------- | -------------- | --------------------------------------- |
+| controller | DOM controller | https://github.com/dot-event/controller |
+| el         | DOM elements   | https://github.com/dot-event/el         |
+| render     | SSR render     | https://github.com/dot-event/render     |
