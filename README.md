@@ -77,7 +77,7 @@ When you attempt to attach a view to an element that already exists and has cont
 
 ## Props
 
-The `view` composer automatically adds the name of the view to the `prop` array within the `render` or `update` function.
+The `view` composer automatically adds the name of the view to [the `prop` array](https://github.com/dot-event/dot-event2#props) within the `render` or `update` function.
 
 It is a typical pattern to use `prop.join(".")` as your div id. Because the view name is automatically added to props, you can keep passing props down to your sub views without modifying or thinking too much about it.
 
