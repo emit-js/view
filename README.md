@@ -74,3 +74,11 @@ You may also optionally return a new element from `update` to replace it.
 ## SSR
 
 When you attempt to attach a view to an element that already exists and has content, the view will **only call `update`** and will add an `ssr: true` option to the [emit argument](https://github.com/dot-event/dot-event2#emit-argument).
+
+## Props
+
+The `view` composer automatically adds the name of the view to the `prop` array within the `render` or `update` function.
+
+It is a typical pattern to use `prop.join(".")` as your div id. Because the view name is automatically added to props, you can keep passing props down to your sub views without modifying or thinking too much about it.
+
+In this way, we leverage props to get great element identifiers and [logging](https://github.com/dot-event/log2) without any effort!
