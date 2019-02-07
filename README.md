@@ -70,11 +70,11 @@ The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to `u
 
 ## Props
 
-The `view` composer injects the name of the view to [the `prop` array](https://github.com/dot-event/dot-event2#props).
+Commonly we append the view name to [the `prop` array](https://github.com/dot-event/dot-event2#props) and use the concatenated props as the view element id.
 
-A common pattern is to use joined props as your div id and then to pass props down to your sub views.
+If you then pass those props down to sub-views, it produces descriptive element identifiers and [logs](https://github.com/dot-event/log2).
 
-We leverage prop injection to get great element identifiers and [logging](https://github.com/dot-event/log2) without any effort.
+The `view` composer injects the view name into [the `prop` array](https://github.com/dot-event/dot-event2#props) automatically, so you don't need to worry about the append step.
 
 ## Related composers
 
