@@ -47,41 +47,34 @@ dot.myView() // creates element from `render`
 dot.myView({ value: "hello" }) // updates element from `update`
 ```
 
-## Attaching elements
+## Attach view to the DOM
 
-The example above doesn't attach the element to the DOM. You can do that one of two ways with the **initial view call**:
-
-### Via selector
+By default, the view will try to discover the element ID from props:
 
 ```js
-dot.myView({ selector: "#myId" })
+dot.myView("myId") // replace #myId with element from `render`
+dot.myView("myId") // replace if element returned from `update`
 ```
 
-### Via prop
-
-When props are passed to the view, the view component uses them to try to find an element ID:
+You may also specify a selector:
 
 ```js
-dot.myView("myId")
+dot.myView({ selector: "#myView" })
 ```
-
-### How it's attached
-
-When a matching element is found from the selector option or props, that element is **replaced** with the element you return from `render`.
-
-You may also optionally return a new element from `update` to replace it.
 
 ## SSR
 
-When you attempt to attach a view to an element that already exists and has content, the view will **only call `update`** and will add an `ssr: true` option to the [emit argument](https://github.com/dot-event/dot-event2#emit-argument).
+When attaching to an element that already exists and has content, the view **only calls `update`**.
+
+The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to `update` includes an `ssr: true` option in SSR mode.
 
 ## Props
 
-The `view` composer automatically adds the name of the view to [the `prop` array](https://github.com/dot-event/dot-event2#props) within the `render` or `update` function.
+The `view` composer injects the name of the view to [the `prop` array](https://github.com/dot-event/dot-event2#props).
 
-It is a typical pattern to use `prop.join(".")` as your div id. Because the view name is automatically added to props, you can keep passing props down to your sub views without modifying or thinking too much about it.
+A common pattern is to use joined props as your div id and then to pass props down to your sub views.
 
-In this way, we leverage props to get great element identifiers and [logging](https://github.com/dot-event/log2) without any effort!
+We leverage prop injection to get great element identifiers and [logging](https://github.com/dot-event/log2) without any effort.
 
 ## Related composers
 
