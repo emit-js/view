@@ -43,8 +43,8 @@ Then use it:
 ```js
 require("./myView").default(dot)
 
-dot.myView() // creates element from `render`
-dot.myView({ value: "hello" }) // updates element from `update`
+dot.myView() // `render` element
+dot.myView({ value: "hello" }) // `update` element
 ```
 
 ## Attach to dom
@@ -52,14 +52,14 @@ dot.myView({ value: "hello" }) // updates element from `update`
 By default, the view call finds the element id from props:
 
 ```js
-dot.myView("myId") // replace #myId with element from `render`
-dot.myView("myId") // replace if element returned from `update`
+dot.myView("myId") // `render` element to #myId
+dot.myView("myId") // `update` element if element returned
 ```
 
 You may also specify a selector:
 
 ```js
-dot.myView({ selector: "#myView" })
+dot.myView({ selector: "#myId" }) // `render` element to #myId
 ```
 
 ## SSR
