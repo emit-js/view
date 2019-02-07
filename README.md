@@ -1,6 +1,6 @@
 # @dot-event/view
 
-dot-event dom views
+[dot-event](https://github.com/dot-event/dot-event2#readme) dom views
 
 ![view](view.gif)
 
