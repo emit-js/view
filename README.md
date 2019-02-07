@@ -64,9 +64,9 @@ dot.myView({ selector: "#myView" })
 
 ## SSR
 
-When attaching to an element that already exists and has content, the view **only calls `update`**.
+When attaching to an element that already exists and has content, only the `update` function is called.
 
-The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to `update` includes an `ssr: true` option in SSR mode.
+The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to the `update` function includes an `ssr: true` option when in SSR mode.
 
 ## Props
 
