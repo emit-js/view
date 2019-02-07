@@ -62,6 +62,12 @@ You may also specify a selector:
 dot.myView({ selector: "#myId" }) // `render` element to #myId
 ```
 
+Or provide the element to replace directly:
+
+```js
+dot.myView({ element: document.getElementById("myId") })
+```
+
 ## SSR
 
 If an element already exists and has content, the `update` function is called instead of the inital `render`.
