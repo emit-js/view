@@ -78,8 +78,8 @@ Luckily, the `view` composer injects the view name into [the `prop` array](https
 
 ## Related composers
 
-| Library    | Description    | URL                                     |
-| ---------- | -------------- | --------------------------------------- |
-| controller | DOM controller | https://github.com/dot-event/controller |
-| el         | DOM elements   | https://github.com/dot-event/el         |
-| render     | SSR render     | https://github.com/dot-event/render     |
+| Library    | Description    | URL                                            |
+| ---------- | -------------- | ---------------------------------------------- |
+| controller | DOM controller | https://github.com/dot-event/controller#readme |
+| el         | DOM elements   | https://github.com/dot-event/el#readme         |
+| render     | SSR render     | https://github.com/dot-event/render#readme     |
