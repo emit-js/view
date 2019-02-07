@@ -47,9 +47,9 @@ dot.myView() // creates element from `render`
 dot.myView({ value: "hello" }) // updates element from `update`
 ```
 
-## Attach view to the DOM
+## Attach to dom
 
-By default, the view will try to discover the element ID from props:
+By default, the view call finds the element id from props:
 
 ```js
 dot.myView("myId") // replace #myId with element from `render`
@@ -64,7 +64,7 @@ dot.myView({ selector: "#myView" })
 
 ## SSR
 
-When attaching to an element that already exists and has content, only the `update` function is called.
+If an element already exists and has content, the `update` function is called instead of the inital `render`.
 
 The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to the `update` function includes an `ssr: true` option when in SSR mode.
 
