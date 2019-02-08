@@ -23,9 +23,6 @@ First create your view composer:
 
 ```js
 export default function(dot) {
-  if (dot.myView) {
-    return
-  }
   dot.view("myView", { render, update })
 }
 
