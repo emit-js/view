@@ -1,6 +1,6 @@
 # @dot-event/view
 
-[dot-event](https://github.com/dot-event/dot-event2#readme) dom views
+[dot-event](https://github.com/dot-event/dot-event#readme) dom views
 
 ![view](view.gif)
 
@@ -69,15 +69,15 @@ dot.myView({ element: document.getElementById("myId") })
 
 If an element already exists and has content, the `update` function is called instead of the inital `render`.
 
-The [emit argument](https://github.com/dot-event/dot-event2#emit-argument) to the `update` function includes an `ssr: true` option when in SSR mode.
+The [emit argument](https://github.com/dot-event/dot-event#emit-argument) to the `update` function includes an `ssr: true` option when in SSR mode.
 
 ## Props
 
-Commonly we append the view name to [the `prop` array](https://github.com/dot-event/dot-event2#props) and pass the concatenated props to sub-events.
+Commonly we append the view name to [the `prop` array](https://github.com/dot-event/dot-event#props) and pass the concatenated props to sub-events.
 
-Passing those props down produces descriptive element ids and [logs](https://github.com/dot-event/log2) that describe the call stack.
+Passing those props down produces descriptive element ids and [logs](https://github.com/dot-event/log) that describe the call stack.
 
-Luckily, the `view` composer injects the view name into [the `prop` array](https://github.com/dot-event/dot-event2#props) automatically, eliminating the view name append step.
+Luckily, the `view` composer injects the view name into [the `prop` array](https://github.com/dot-event/dot-event#props) automatically, eliminating the view name append step.
 
 ## Related composers
 
