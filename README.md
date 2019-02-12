@@ -22,7 +22,7 @@ require("@dot-event/view")(dot)
 First create your view composer:
 
 ```js
-export default function(dot) {
+module.exports = function(dot) {
   dot.view("myView", { render, update })
 }
 
@@ -38,7 +38,7 @@ function update(prop, arg) {
 Then use it:
 
 ```js
-require("./myView").default(dot)
+require("./myView")(dot)
 
 dot.myView() // `render` element
 dot.myView({ value: "hello" }) // `update` element
