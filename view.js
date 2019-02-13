@@ -13,7 +13,7 @@ module.exports = function(dot, opts) {
   state.views = state.views || new Map()
 
   if (state.log) {
-    state.log.levels.view = state.log.levels.view || {
+    state.log.view = state.log.view || {
       info: "debug",
     }
   }
@@ -25,9 +25,7 @@ function view(prop, arg, dot) {
   var state = dot.state
 
   if (state.log) {
-    state.log.levels[prop[0]] = state.log.levels[
-      prop[0]
-    ] || {
+    state.log[prop[0]] = state.log[prop[0]] || {
       info: "debug",
     }
   }
