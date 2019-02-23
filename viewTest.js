@@ -22,7 +22,7 @@ beforeEach(function() {
   body = document.body
 
   global.document = window.document
-  main = el("div", { id: "main" })
+  main = el("div", { id: "main.test" })
 
   clear(body)
   body.appendChild(main)
@@ -169,7 +169,7 @@ test("empty body (selector)", function() {
   var render = function(prop, arg) {
     expect(arg).toEqual({
       element: body.children[0],
-      selector: "#main",
+      selector: "#main\\.test",
       ssr: false,
     })
     return el("div", "test")
@@ -177,7 +177,7 @@ test("empty body (selector)", function() {
 
   dot.view("testView", { render: render, update: update })
 
-  dot.testView({ selector: "#main" })
+  dot.testView({ selector: "#main\\.test" })
   dot.testView()
 
   expect(body.children.length).toBe(1)
@@ -228,7 +228,7 @@ test("existing body (selector)", function() {
     if (counter++ === 0) {
       expect(arg).toEqual({
         element: body.children[0],
-        selector: "#main",
+        selector: "#main\\.test",
         ssr: true,
       })
     } else {
@@ -246,7 +246,7 @@ test("existing body (selector)", function() {
 
   dot.view("testView", { render: render, update: update })
 
-  dot.testView({ selector: "#main" })
+  dot.testView({ selector: "#main\\.test" })
   dot.testView()
 
   expect(body.children.length).toBe(1)

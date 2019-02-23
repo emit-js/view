@@ -30,21 +30,18 @@ function view(prop, arg, dot) {
     }
   }
 
-  dot.any(prop[0], renderOrUpdate)
-
   dot.any(
-    prop[0] + "Render",
-    arg.idProp ? arg.render : addChildProp.bind(arg.render)
+    prop[0],
+    arg.idProp
+      ? renderOrUpdate
+      : addChildProp.bind(renderOrUpdate)
   )
-
-  dot.any(
-    prop[0] + "Update",
-    arg.idProp ? arg.update : addChildProp.bind(arg.update)
-  )
+  dot.any(prop[0] + "Render", arg.render)
+  dot.any(prop[0] + "Update", arg.update || arg.render)
 }
 
 function addChildProp(p, a, d, e, s) {
-  var prop = e.replace(/[A-Z][a-z]*[A-Z][a-z]*$/, "")
+  var prop = e.replace(/[A-Z][a-z]*$/, "")
   if (p[p.length - 1] !== prop) {
     p = p.concat([prop])
   }
