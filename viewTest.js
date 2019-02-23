@@ -45,10 +45,9 @@ test("no element", function() {
     return el("div")
   }
 
-  dot.view("testView", "test", {
-    render: render,
-    update: update,
-  })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   var out = dot.testView()
 
@@ -68,7 +67,9 @@ test("no element, call twice", function() {
     return el("div")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView()
   dot.testView()
@@ -90,7 +91,9 @@ test("empty document", function() {
     return el("html", el("body"))
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView({ element: document })
   dot.testView()
@@ -120,7 +123,9 @@ test("empty body", function() {
     return el("div", "test")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView({ element: main })
   dot.testView()
@@ -147,7 +152,9 @@ test("empty body (prop)", function() {
     return el("div", "test")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView("main")
   dot.testView("main")
@@ -175,7 +182,9 @@ test("empty body (selector)", function() {
     return el("div", "test")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView({ selector: "#main\\.test" })
   dot.testView()
@@ -209,7 +218,9 @@ test("existing body (prop)", function() {
     throw new Error("shouldn't render")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView("main")
   dot.testView("main")
@@ -244,7 +255,9 @@ test("existing body (selector)", function() {
     throw new Error("shouldn't render")
   }
 
-  dot.view("testView", { render: render, update: update })
+  dot.view("testView")
+  dot.any("testViewRender", render)
+  dot.any("testViewUpdate", update)
 
   dot.testView({ selector: "#main\\.test" })
   dot.testView()

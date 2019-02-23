@@ -32,16 +32,14 @@ function view(prop, arg, dot) {
 
   dot.any(
     prop[0],
-    arg.idProp
-      ? renderOrUpdate
-      : addChildProp.bind(renderOrUpdate)
+    !arg || arg.addProp !== false
+      ? addChildProp.bind(renderOrUpdate)
+      : renderOrUpdate
   )
-  dot.any(prop[0] + "Render", arg.render)
-  dot.any(prop[0] + "Update", arg.update || arg.render)
 }
 
 function addChildProp(p, a, d, e, s) {
-  var prop = e.replace(/[A-Z][a-z]*$/, "")
+  var prop = e.replace(/View$/, "")
   if (p[p.length - 1] !== prop) {
     p = p.concat([prop])
   }
@@ -53,6 +51,7 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
 
   var el,
     id = [e].concat(prop).join("."),
+    suffix = "Render",
     v = getOrCreateView(prop, arg, dot, id),
     views = dot.state.views
 
@@ -61,10 +60,13 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   var existsOrHasContent =
     exists || (v.element && v.element.innerHTML)
 
+  if (existsOrHasContent && dot[e + "Update"]) {
+    suffix = "Update"
+  }
+
   var a = Object.assign({}, arg, v, {
-      ssr: !exists && !!v.element && !!v.element.innerHTML,
-    }),
-    suffix = existsOrHasContent ? "Update" : "Render"
+    ssr: !exists && !!v.element && !!v.element.innerHTML,
+  })
 
   el = dot(e + suffix, prop, a)
 
