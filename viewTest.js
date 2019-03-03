@@ -1,10 +1,10 @@
 /* eslint-env jest */
 
-var dot = require("dot-event")()
-var log = require("@dot-event/log")
-var view = require("./")
-var el = require("attodom").el
-var JSDOM = require("jsdom").JSDOM
+var dot,
+  el = require("attodom").el,
+  JSDOM = require("jsdom").JSDOM,
+  log = require("@dot-event/log"),
+  view = require("./")
 
 var body, document, main, window
 
@@ -27,7 +27,7 @@ beforeEach(function() {
   clear(body)
   body.appendChild(main)
 
-  dot.reset()
+  dot = require("dot-event")()
   log(dot)
   view(dot)
 })
