@@ -12,22 +12,14 @@ module.exports = function(dot, opts) {
   state.view = opts || {}
   state.views = state.views || new Map()
 
-  if (state.log) {
-    state.log.view = state.log.view || {
-      info: "debug",
-    }
-  }
+  dot("logLevel", "view", { info: "debug" })
 
   dot.any("view", view)
 }
 
 function view(prop, arg, dot) {
-  var state = dot.state
-
-  if (state.log) {
-    state.log[prop[0]] = state.log[prop[0]] || {
-      info: "debug",
-    }
+  if (prop[0]) {
+    dot("logLevel", prop[0], { info: "debug" })
   }
 
   dot.any(
