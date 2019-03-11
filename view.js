@@ -2,15 +2,12 @@
 /*prettier-ignore*/
 "use strict"
 
-module.exports = function(dot, opts) {
-  var state = dot.state
-
-  if (state.view) {
+module.exports = function(dot) {
+  if (dot.view) {
     return
   }
 
-  state.view = opts || {}
-  state.views = state.views || new Map()
+  dot.state.views = new Map()
 
   dot("logLevel", "view", { info: "debug" })
 
