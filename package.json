@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@dot-event/log": "1.0.25",
+    "@dot-event/log": "1.0.26",
     "attodom": "0.12.0",
     "dot-event": "3.1.2",
     "eslint": "5.15.1",
