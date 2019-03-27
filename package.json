@@ -1,6 +1,6 @@
 {
   "name": "@dot-event/view",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "dot-event views",
   "keywords": [
     "dot-event",
@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@dot-event/log": "1.0.32",
+    "@dot-event/log": "1.0.33",
     "attodom": "0.12.0",
     "dot-event": "3.2.1",
     "eslint": "5.15.1",
