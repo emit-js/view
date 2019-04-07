@@ -2,54 +2,61 @@
 /*prettier-ignore*/
 "use strict"
 
-module.exports = function(dot) {
-  if (dot.view) {
+module.exports = function(emit) {
+  if (emit.view) {
     return
   }
 
-  dot.state.views = new Map()
+  emit.state.views = new Map()
 
-  dot("logLevel", "view", { info: "debug" })
+  emit("logLevel", "view", { info: "debug" })
 
-  dot.any("view", view)
+  emit.any("view", view)
 }
 
-function view(prop, arg, dot) {
-  if (prop[0]) {
-    dot("logLevel", prop[0], { info: "debug" })
+function view(arg, prop, emit) {
+  var name = prop[0] || arg
+
+  if (name) {
+    emit("logLevel", name, { info: "debug" })
   }
 
-  dot.any(
-    prop[0],
-    !arg || arg.addProp !== false
+  emit.any(
+    name,
+    arg.addProp !== false
       ? addChildProp.bind(renderOrUpdate)
       : renderOrUpdate
   )
 }
 
-function addChildProp(p, a, d, e, s) {
-  var prop = e.replace(/View$/, "")
+function addChildProp(a, p, e, s) {
+  var prop = s.event.replace(/View$/, "")
   if (p[p.length - 1] !== prop) {
     p = p.concat([prop])
   }
-  return this.call(null, p, a, d, e, s)
+  return this.call(null, a, p, e, s)
 }
 
-function renderOrUpdate(prop, arg, dot, e, sig) {
+function renderOrUpdate(arg, prop, emit, sig) {
   arg = arg || {}
 
+  if (typeof arg === "string") {
+    prop = [arg].concat(prop)
+    arg = {}
+  }
+
   var el,
-    id = [e].concat(prop).join("."),
+    id = [sig.event].concat(prop).join("."),
     suffix = "Render",
-    v = getOrCreateView(prop, arg, dot, id),
-    views = dot.state.views
+    v = getOrCreateView(arg, prop, emit, id),
+    views = emit.state.views
 
   var exists = views.has(id)
 
   var existsOrHasContent =
     exists || (v.element && v.element.innerHTML)
 
-  if (existsOrHasContent && dot[e + "Update"]) {
+  if (existsOrHasContent && emit[sig.event + "Update"]) {
     suffix = "Update"
   }
 
@@ -57,7 +64,7 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
     ssr: !exists && !!v.element && !!v.element.innerHTML,
   })
 
-  el = dot(e + suffix, prop, a)
+  el = emit(sig.event + suffix, prop, a)
 
   if (el.then) {
     el = undefined
@@ -80,15 +87,15 @@ function renderOrUpdate(prop, arg, dot, e, sig) {
   views.set(id, v)
 }
 
-function getOrCreateView(prop, arg, dot, id) {
+function getOrCreateView(arg, prop, emit, id) {
   return (
-    dot.state.views.get(id) || {
-      element: arg.element || findElement(prop, arg),
+    emit.state.views.get(id) || {
+      element: arg.element || findElement(arg, prop),
     }
   )
 }
 
-function findElement(prop, arg) {
+function findElement(arg, prop) {
   if (arg && arg.selector) {
     return document.querySelector(arg.selector)
   } else if (prop.length) {

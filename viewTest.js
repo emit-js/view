@@ -1,9 +1,9 @@
 /* eslint-env jest */
 
-var dot,
-  el = require("attodom").el,
+var el = require("attodom").el,
+  emit,
   JSDOM = require("jsdom").JSDOM,
-  log = require("@dot-event/log"),
+  log = require("@emit-js/log"),
   view = require("./")
 
 var body, document, main, window
@@ -27,9 +27,9 @@ beforeEach(function() {
   clear(body)
   body.appendChild(main)
 
-  dot = require("dot-event")()
-  log(dot)
-  view(dot)
+  emit = require("@emit-js/emit")()
+  log(emit)
+  view(emit)
 })
 
 test("no element", function() {
@@ -39,17 +39,17 @@ test("no element", function() {
     throw new Error("shouldn't update")
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg, prop) {
     expect(prop).toEqual(["test"])
     expect(arg.ssr).toBe(false)
     return el("div")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  var out = dot.testView()
+  var out = emit.testView()
 
   expect(out.tagName).toBe("DIV")
   expect(document.body.children[0]).toBe(main)
@@ -58,21 +58,21 @@ test("no element", function() {
 test("no element, call twice", function() {
   expect.assertions(3)
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     expect(arg.ssr).toBe(false)
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg) {
     expect(arg.ssr).toBe(false)
     return el("div")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView()
-  dot.testView()
+  emit.testView()
+  emit.testView()
 
   expect(document.body.children[0]).toBe(main)
 })
@@ -86,17 +86,17 @@ test("empty document", function() {
     expect(true).toBe(true)
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg) {
     expect(arg.ssr).toBe(false)
     return el("html", el("body"))
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView({ element: document })
-  dot.testView()
+  emit.testView({ element: document })
+  emit.testView()
 
   expect(document.children.length).toBe(1)
   expect(document.children[0].tagName).toBe("HTML")
@@ -108,14 +108,14 @@ test("empty document", function() {
 test("empty body", function() {
   expect.assertions(4)
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       ssr: false,
     })
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       ssr: false,
@@ -123,12 +123,12 @@ test("empty body", function() {
     return el("div", "test")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView({ element: main })
-  dot.testView()
+  emit.testView({ element: main })
+  emit.testView()
 
   expect(body.children.length).toBe(1)
   expect(body.children[0].textContent).toBe("test")
@@ -137,14 +137,14 @@ test("empty body", function() {
 test("empty body (prop)", function() {
   expect.assertions(4)
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       ssr: false,
     })
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       ssr: false,
@@ -152,12 +152,12 @@ test("empty body (prop)", function() {
     return el("div", "test")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView("main")
-  dot.testView("main")
+  emit.testView("main")
+  emit.testView("main")
 
   expect(body.children.length).toBe(1)
   expect(body.children[0].textContent).toBe("test")
@@ -166,14 +166,14 @@ test("empty body (prop)", function() {
 test("empty body (selector)", function() {
   expect.assertions(4)
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       ssr: false,
     })
   }
 
-  var render = function(prop, arg) {
+  var render = function(arg) {
     expect(arg).toEqual({
       element: body.children[0],
       selector: "#main\\.test",
@@ -182,12 +182,12 @@ test("empty body (selector)", function() {
     return el("div", "test")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView({ selector: "#main\\.test" })
-  dot.testView()
+  emit.testView({ selector: "#main\\.test" })
+  emit.testView()
 
   expect(body.children.length).toBe(1)
   expect(body.children[0].textContent).toBe("test")
@@ -199,7 +199,7 @@ test("existing body (prop)", function() {
 
   body.children[0].appendChild(el("div", "test"))
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     if (counter++ === 0) {
       expect(arg).toEqual({
         element: body.children[0],
@@ -218,12 +218,12 @@ test("existing body (prop)", function() {
     throw new Error("shouldn't render")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView("main")
-  dot.testView("main")
+  emit.testView("main")
+  emit.testView("main")
 
   expect(body.children.length).toBe(1)
   expect(body.children[0].textContent).toBe("test2")
@@ -235,7 +235,7 @@ test("existing body (selector)", function() {
 
   body.children[0].appendChild(el("div", "test"))
 
-  var update = function(prop, arg) {
+  var update = function(arg) {
     if (counter++ === 0) {
       expect(arg).toEqual({
         element: body.children[0],
@@ -255,12 +255,12 @@ test("existing body (selector)", function() {
     throw new Error("shouldn't render")
   }
 
-  dot.view("testView")
-  dot.any("testViewRender", render)
-  dot.any("testViewUpdate", update)
+  emit.view("testView")
+  emit.any("testViewRender", render)
+  emit.any("testViewUpdate", update)
 
-  dot.testView({ selector: "#main\\.test" })
-  dot.testView()
+  emit.testView({ selector: "#main\\.test" })
+  emit.testView()
 
   expect(body.children.length).toBe(1)
   expect(body.children[0].textContent).toBe("test2")
