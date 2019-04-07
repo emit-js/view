@@ -3,7 +3,7 @@
   "version": "0.0.34",
   "description": "emit views",
   "keywords": [
-    "@emit-js/emit",
+    "emit",
     "view"
   ],
   "author": "emit <emit@emit-js.com>",
